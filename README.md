@@ -1,2 +1,2 @@
 # MindX-practice
-# MindX-practice
+# folder of task 
