@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@300&display=swap" rel="stylesheet">
+    <title>Homework</title>
+</head>
+ <style type="text/css">
+    @font-face {
+        font-family: 'Dosis', sans-serif;
+    }
+    body, input {
+        background-color: #c1b5b5e8;
+        font-family: 'Dosis', sans-serif;
+        font-size: 1.2rem;
+        font-weight: normal;
+        line-height: 12px;
+    }
+    input {
+        border-radius: 6px;
+        height: 24px;
+        max-width: 250px;
+        outline: none;
+        background-color: #ffffff;
+        border: solid 1px #ffffff;
+        color: #000000;
+    }   
+    button {
+        font-size: 1rem;
+        line-height: 14px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        color: #ffffff;
+        height: 32px;
+        max-width: 200px;
+        padding: 10px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        color: #000000;
+    } 
+    /* #added-color p{
+        width: auto;
+        display: inline-block;
+        padding: 0 10px 0 0;
+    } */
+    #added-color button {
+        margin-left: 20px;
+    }
+
+    ul {
+        list-style-type: none;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        padding-inline-start: 0;
+    }
+    li {
+        padding: 5px 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<body>
+    <div>
+        <label style="color:#000000;">Thêm màu bất kỳ: <input id="inputColor" type="text" required> </label>
+        <br><br>
+        <button id="addBtn">Add color</button>
+    </div>
+
+    <div id="result">
+        
+    </div>
+
+    <ul id="added-color">
+        
+    </ul>
+   
+   
+    
+</body>
+<script>    
+    let list = document.getElementById('added-color'); 
+    const colorArr = ['red','yellow', 'green'];
+    const colorAdded = [];
+    
+    const color = ['AliceBlue','AntiqueWhite','Aqua','Aquamarine','Azure','Beige','Bisque','Black','BlanchedAlmond',
+    'Blue','BlueViolet','Brown','BurlyWood','CadetBlue','Chartreuse','Chocolate','Coral','CornflowerBlue','Cornsilk',
+    'Crimson','Cyan','DarkBlue','DarkCyan','DarkGoldenRod','DarkGray','DarkGrey','DarkGreen','DarkKhaki','DarkMagenta',
+    'DarkOliveGreen','DarkOrange','DarkOrchid','DarkRed','DarkSalmon','DarkSeaGreen','DarkSlateBlue','DarkSlateGray',
+    'DarkSlateGrey','DarkTurquoise','DarkViolet','DeepPink','DeepSkyBlue','DimGray','DimGrey','DodgerBlue','FireBrick',
+    'FloralWhite','ForestGreen','Fuchsia','Gainsboro','GhostWhite','Gold','GoldenRod','Gray','Grey','Green','GreenYellow',
+    'HoneyDew','HotPink','IndianRed','Indigo','Ivory','Khaki','Lavender','LavenderBlush','LawnGreen','LemonChiffon',
+    'LightBlue','LightCoral','LightCyan','LightGoldenRodYellow','LightGray','LightGrey','LightGreen','LightPink',
+    'LightSalmon','LightSeaGreen','LightSkyBlue','LightSlateGray','LightSlateGrey','LightSteelBlue','LightYellow',
+    'Lime','LimeGreen','Linen','Magenta','Maroon','MediumAquaMarine','MediumBlue','MediumOrchid','MediumPurple',
+    'MediumSeaGreen','MediumSlateBlue','MediumSpringGreen','MediumTurquoise','MediumVioletRed','MidnightBlue','MintCream',
+    'MistyRose','Moccasin','NavajoWhite','Navy','OldLace','Olive','OliveDrab','Orange','OrangeRed','Orchid','PaleGoldenRod',
+    'PaleGreen','PaleTurquoise','PaleVioletRed','PapayaWhip','PeachPuff','Peru','Pink','Plum','PowderBlue','Purple',
+    'RebeccaPurple','Red','RosyBrown','RoyalBlue','SaddleBrown','Salmon','SandyBrown','SeaGreen','SeaShell','Sienna',
+    'Silver','SkyBlue','SlateBlue','SlateGray','SlateGrey','Snow','SpringGreen','SteelBlue','Tan','Teal','Thistle',
+    'Tomato','Turquoise','Violet','Wheat','White','WhiteSmoke','Yellow','YellowGreen'].map(x => x.toLocaleLowerCase());
+    
+    // xuất 3 màu mặc định ra màn hình browser
+    for(let i=0; i<colorArr.length; i++) {
+            let p = document.createElement('P');
+            let textP = document.createTextNode(`${colorArr[i]}`);
+            p.appendChild(textP);
+            document.getElementById('result').appendChild(p);
+            p.id=`colr-${i+1}`;
+            document.getElementById(`colr-${i+1}`).style.color=`${colorArr[i]}`; 
+            
+            // hoặc dùng class name để gán attribute cho <p>
+            // p.className = `${colorArr[i]}`;            
+            // let temp = document.getElementsByClassName(`${colorArr[i]}`);
+            // console.log(temp);
+            // for(let n = 0; n < temp.length; n++) {
+            //     temp[n].style.color=`${colorArr[i]}`;
+            // }
+    } 
+    function checkColor(colr) {        
+        // kiểm tra gía trị nhập vào có là color hay không
+        if(colr == '' || colr == ' ' || colr == null ) {
+            console.log('Ko để trống');
+            return 0;
+        }  
+        colr = colr.toLocaleLowerCase();   
+        return color.indexOf(colr) == -1 ? 0:1; /* toán tử 3 ngôi */
+    }
+        
+    document.getElementById('addBtn').addEventListener("click", function() {
+        let newColor = document.getElementById('inputColor').value;  
+        if(checkColor(newColor) == 0) {
+            alert('Vui lòng nhập gía trị là màu sắc!');
+            return false;
+        }       
+
+        colorAdded.push(newColor); 
+        let li = document.createElement("LI");
+        li.id = colorAdded.length;
+
+        let newP = document.createElement('P');
+        let newText = document.createTextNode(`${newColor}`);
+        newP.appendChild(newText);
+        document.getElementById('added-color').appendChild(newP);
+        newP.id = "color-" + colorAdded.length;
+        document.getElementById("color-" + colorAdded.length).style.color=`${newColor}`;
+
+        //thêm button delete   
+        delBtn = document.createElement("BUTTON");
+        textBtn1 = document.createTextNode("Delete color");
+        delBtn.appendChild(textBtn1);
+        delBtn.id = "delColor-" + colorAdded.length;
+        delBtn.className = "delete-btn";        
+
+        //thêm button update
+        updateBtn = document.createElement("BUTTON");
+        textBtn2 = document.createTextNode("Update color");
+        updateBtn.appendChild(textBtn2);
+        updateBtn.id = "updateColor-" + colorAdded.length;
+        updateBtn.className = "update-btn"; 
+
+        li.appendChild(newP);
+        li.appendChild(delBtn);        
+        li.appendChild(updateBtn);
+        list.appendChild(li); 
+
+        let delButton = document.getElementsByClassName("delete-btn");
+        for (let i= 0; i < delButton.length; i++) { 
+            // delButton[i].onclick = delColor(i);     
+            delButton[i].onclick = function() {
+                document.getElementById(`${i+1}`).remove(); /** câu lệnh chỉ xoá HTML node, mảng colorAdded vẫn tồn tại phần tử */
+                colorAdded.splice(i,1); /** phải xoá phần tử mảng tương ứng, nếu không chỉ là xoá các nodes HTML*/              
+            }
+        }  
+
+        let updateButton = document.getElementsByClassName("update-btn");
+        for (let k= 0; k < updateButton.length; k++) {            
+            updateButton[k].onclick = function() {  
+                let updateColor = document.getElementById("inputColor").value;
+                colorAdded[k] = updateColor;        
+                let newLi = document.getElementById(`${k+1}`);
+                newLi.childNodes[0].innerText =`${updateColor}`;
+                newLi.childNodes[0].style.color=`${updateColor}`;
+            } 
+        }   
+
+    });
+
+
+    // function delColor(colorId) {
+    //     document.getElementById(`${colorId+1}`).remove(); 
+    //     colorAdded.splice(colorId,1);  
+    // }
+    
+</script>
+
+</html>
