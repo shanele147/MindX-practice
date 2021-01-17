@@ -1,0 +1,293 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Middle Test</title>
+    <style type="text/css">
+        @font-face {
+            font-family: 'Dosis', sans-serif;
+        }
+    
+        body,
+        input {
+            /* background-color: #c1b5b5e8; */
+            font-family: 'Dosis', sans-serif;
+            font-size: 1.2rem;
+            font-weight: normal;
+            line-height: 12px;
+        }
+    
+        input {
+            border-radius: 6px;
+            height: 28px;
+            max-width: 250px;
+            outline: none;
+            /* background-color: #ffffff; */
+            border: solid 1px #000000;
+            color: #000000;
+        }
+    
+        button {
+            font-size: 1rem;
+            line-height: 14px;
+            border-radius: 8px;
+            background-color: #7dd5ef;
+            height: 32px;
+            max-width: auto;
+            padding: 10px;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            color: #000000;
+        }
+        
+        ul {
+            list-style-type: none;
+            margin-block-start: 0;
+            margin-block-end: 0;
+            padding-inline-start: 0;
+            padding-top: 10px;
+        }
+    
+        li {
+            width: 100%;
+            align-items: center;
+        }
+
+        #existed>li {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex;">
+        <div style="padding-bottom: 20px;width:50%;">
+            Nhập thông tin user muốn thêm (English):
+            <br><br>
+            <label style="color:#000000;">Name: <input id="inputName" type="text" required> </label>
+            <br><br>
+            <label style="color:#000000;">Age: <input id="inputAge" type="text" required> </label>
+            <br><br>
+            <button id="addUser">Add user</button> <button id="print1">Xem danh sách user mặc định</button>
+        </div>
+
+            <div style="width:50%;">
+                Nhập thông tin user cần tìm (English):<br><br><input id="searchInfo" type="text" required></label>
+                <br><br>
+                <button id="print2">Xem danh sách đầy đủ</button>
+                <br><br>
+                <button id="searchName" onclick="searchByName()">Search by name</button>
+                <br><br>
+                <button id="searchAge" onclick="searchByAge()">Search by age</button>
+                <br><br>
+                <button id="searchAll"  onclick="searchAll()">Search all</button>
+                <ul id="result-search">
+            
+                </ul>
+            </div>
+    </div>
+   
+    <div style="display: flex;">
+        <div style="width:50%";>
+            <br>Danh sách user đang có
+            <ul id="existed">
+        
+            </ul>
+        </div>
+        
+        <div style="width:50%;"><br>Danh sách user thêm vào
+            <ul id="added-user">
+        
+            </ul>
+        </div>
+    </div>  
+
+<body>
+    <script>
+            const X = ["Long", 12, "Nhat", 11, 14, "Minh", "Hoang"]; 
+            let numArr = X.filter(returnNumber);
+            let textArr = X.filter(returnText);
+            
+            function returnNumber(value, index, array) {
+                if (typeof (value) == 'number')
+                    return value;
+            }
+
+            function returnText(value, index, array) {
+                if (typeof (value) == 'string')
+                    return value;
+            }
+            console.log(numArr);
+            console.log(textArr);
+
+            let user = [];
+
+            // tạo 1 mảng user mới bằng cách tổ hợp 2 mảng con vừa filter
+            function createUser() {
+                for (let i = 0; i < textArr.length; i++) {
+                    for (let j = 0; j < numArr.length; j++) {
+                        user = user.concat({userName: textArr[i], userAge: numArr[j] });
+                    }
+                }
+                return user;
+            }
+            createUser();
+            // console.table(user);
+
+            // xuất mảng user có sẵn từ tổ hợp 2 mảng con
+            function outputHtml(arr) {
+                let userOutput = '';
+                for (let n = 0; n < arr.length; n++) {
+                    userOutput += `<li><p id ="name-${n + 1}">Name: ${arr[n].userName}</p> 
+                <p id ="age-${n + 1}" style="padding-left:5px;">Age: ${arr[n].userAge}</p></li>`;
+                }
+                document.getElementById("existed").innerHTML = userOutput;
+            }           
+            document.getElementById('print1').addEventListener("click", function() {
+                 outputHtml(user);
+            });
+           
+
+            // hàm check giá trị nhập vào của người dùng
+            function checkInput(val) {
+                if (val == '' || val == ' ' || val == null) {
+                        return 0;
+                }
+                    return 1;
+            }
+            let idUser = 1;
+            let userName, userAge;
+            let newUser = []; 
+
+            // hàm xuất user ra browser = DOM
+            function addHtml(arr) {
+                let html = '';
+                for (let i=0; i< arr.length; i++) {
+                    html += `<li id="${i+1}"><p id ="name-${i+1}">Name: ${arr[i].userName}</p> 
+                    <p id ="age-${i+1}">Age: ${arr[i].userAge}</p> 
+                    <button id="removeBtn-${i+1}" onclick="remove(${i+1})">Remove User</button>
+                    <button id="updateBtn-${i+1}" onclick="update(${i+1})">Update Info User</button>
+                    </li>`;
+                    // debugger;
+                }
+                document.getElementById("added-user").innerHTML = html;
+            }                          
+            
+            // hàm thêm mới user
+            document.getElementById('addUser').addEventListener("click", function() {
+                userName = document.getElementById('inputName').value;
+                userAge = Number(document.getElementById('inputAge').value);
+                if (!checkInput(userName) || !checkInput(userAge)) {
+                    alert("Vui lòng nhập đầy đủ thông tin!");
+                    return false;
+                }
+                newUser.push({userName, userAge});  
+                addHtml(newUser);              
+                console.table(newUser);
+               
+            });
+
+            // hàm remove user
+            function remove(id) {
+                    newUser.splice(id-1, 1); /* xóa phần tử ở vị trí được click button remove*/
+                    // debugger;
+                    addHtml(newUser); /*tạo mới lại DOM từ mảng đã được xóa => cập nhật lại id cho element*/ 
+                        
+            } 
+
+            // hàm upadte thông tin cho user
+            function update(id) {
+                let updateName = document.getElementById('inputName').value;
+                let updateAge = Number(document.getElementById("inputAge").value);
+                if (!checkInput(userName) || !checkInput(userAge)) {
+                    alert("Vui lòng nhập đầy đủ thông tin!");
+                    return false;
+                }
+                newUser[id - 1].userName = updateName;
+                newUser[id - 1].userAge = updateAge;
+                addHtml(newUser);
+            }
+           
+            // in danh sách full
+            let fullList;
+            document.getElementById('print2').addEventListener("click", function() {
+                fullList = newUser.concat(user);
+                // console.table(fullList);  
+                outputHtml(fullList);
+                return fullList;
+            });          
+
+            function searchByName(val) {
+                val = document.getElementById('searchInfo').value.toLowerCase();
+                if (!checkInput(val)) {
+                    alert("Vui lòng nhập thông tin!");
+                    return false;
+                }
+                let nameList = fullList.map(a => a.userName); /*lấy tất cả các value của properties là userName*/
+                nameList = nameList.map(a => a.toLowerCase());                                
+                if (nameList.indexOf(val) != -1) {
+                    let resultName = fullList.filter(function (el) { return el.userName.toLowerCase() == val });
+                    outputHtml(resultName);
+                }
+                else {
+                    alert("Khong co user nao co ten vua nhap!");
+                    return false;
+                }
+            }
+
+            function searchByAge(val) {
+                    val = Number(document.getElementById('searchInfo').value);
+                    if (!checkInput(val)) {
+                        alert("Vui lòng nhập thông tin!");
+                        return false;
+                    }
+                    let ageList = fullList.map(a => a.userAge);
+                    if(ageList.indexOf(val) != -1) {
+                        let resultAge = fullList.filter(function (el) { return el.userAge == val })
+                        outputHtml(resultAge);
+                    }                    
+                    else {
+                        alert("Khong co user nao co tuoi vua nhap!");
+                        return false;
+                    }                   
+                    
+                }
+                function searchAll(val) {
+                        val = document.getElementById('searchInfo').value;
+                        if (!checkInput(val)) {
+                            alert("Vui lòng nhập thông tin!");
+                            return false;
+                        }
+                        if (!Number(val) == true) {
+                            let nameList = fullList.map(a => a.userName);
+                            nameList = nameList.map(a => a.toLowerCase());
+                            if (nameList.indexOf(val) != -1) {
+                                let resultName = fullList.filter(function (el) { return el.userName.toLowerCase() == val });
+                                outputHtml(resultName);
+                            }
+                            else {
+                                alert("Khong co user nao co ten vua nhap!");
+                                return false;
+                            }
+                        }
+                       
+                        else {
+                            val = Number(val);
+                            let ageList = fullList.map(a => a.userAge);
+                            if (ageList.indexOf(val) != -1) {
+                                let resultAge = fullList.filter(function (el) { return el.userAge == val })
+                                outputHtml(resultAge);
+                            }
+                            else {
+                                alert("Khong co user nao co tuoi vua nhap!");
+                                return false;
+                            }
+                          
+                        }
+                    }
+
+       
+    </script>
+</body>
+</html>
